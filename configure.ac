@@ -1,114 +1,3 @@
-AC_INIT([enigma2],[3.0.0],[enigma2-devel@lists.elitedvb.net])
-AM_INIT_AUTOMAKE([dist-bzip2 no-define tar-pax -Wno-portability])
-AC_CONFIG_HEADERS([enigma2_config.h])
-
-# Silent rules are available since 1.11, but older versions
-# are still in use. So don't use them unconditionally.
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-
-AC_USE_SYSTEM_EXTENSIONS
-AC_SYS_LARGEFILE
-
-AC_PROG_CC
-AC_PROG_CXX
-m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
-AC_CONFIG_MACRO_DIR([m4])
-
-AC_CHECK_HEADERS([dbox/fp.h dbox/lcd-ks0713.h])
-
-AC_PATH_PROG(MSGFMT, msgfmt, AC_MSG_ERROR(Could not find msgfmt))
-
-AM_PATH_PYTHON
-AX_PYTHON_DEVEL
-AX_PKG_SWIG
-AX_SWIG_ENABLE_CXX
-AX_SWIG_PYTHON
-AX_PTHREAD
-
-TUXBOX_APPS_DVB
-
-AM_CONDITIONAL(HAVE_GIT_DIR, test -d "$srcdir/.git")
-AM_CONDITIONAL(HAVE_FAKE_GIT_DIR, test -f "$srcdir/.git/last_commit_info")
-
-dnl versions of gstreamer and plugins-base
-AC_ARG_WITH(gstversion,
-        AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
-        [GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
-
-PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
-PKG_CHECK_MODULES(LIBDDVD, libdreamdvd, HAVE_LIBDDVD="yes", HAVE_LIBDDVD="no")
-AM_CONDITIONAL(HAVE_LIBDDVD, test "$HAVE_LIBDDVD" = "yes")
-
-AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
-AC_SUBST(LIBDL_LIBS)
-AC_CHECK_LIB([jpeg], [jpeg_set_defaults], [LIBJPEG_LIBS="-ljpeg"], [AC_MSG_ERROR([Could not find libjpeg])])
-AC_SUBST(LIBJPEG_LIBS)
-AC_CHECK_LIB([ungif], [DGifOpen], [LIBGIF_LIBS="-lungif"], [AC_CHECK_LIB([gif], [DGifOpen], [LIBGIF_LIBS="-lgif"], [AC_MSG_ERROR([Could not find libgif or libungif])])])
-AC_SUBST(LIBGIF_LIBS)
-
-AC_LANG_PUSH([C++])
-AC_CHECK_LIB([xmlccwrap], [exit], [LIBXMLCCWRAP_LIBS="-lxmlccwrap"], [AC_MSG_ERROR([Could not find libxmlccwrap])])
-AC_SUBST(LIBXMLCCWRAP_LIBS)
-AC_LANG_POP
-
-AC_ARG_WITH(remote-keyboard,
-        AC_HELP_STRING([--with-remote-keyboard], [use remote keyboard on dvbapp, yes or no]),
-        [[withrckbd=$withval]],
-        [[withrckbd=no]]
-)
-if test x"$withrckbd" != xno ; then
-        AC_DEFINE(VUPLUS_USE_RCKBD, 1,[Define when using a rc-keyboard on dvbapp])
-fi
-
-AC_ARG_WITH(set-right-half-vfd-skin,
-        AC_HELP_STRING([--with-set-right-half-vfd-skin], [display right_half_vfd_icons from skin(for ultimo), yes or no]),
-        [[setrighthalfvfdskin=$withval]],
-        [[setrighthalfvfdskin=no]]
-)
-if test x"$setrighthalfvfdskin" != xno ; then
-        AC_DEFINE(SET_RIGHT_HALF_VFD_SKIN, 1,[Define when display right_half_vfd_icons from skin, for ultimo])
-fi
-AM_CONDITIONAL(SET_RIGHT_HALF_VFD_SKIN, test x"$setrighthalfvfdskin" != xno)
-
-AC_ARG_WITH(display-text-vfd,
-        AC_HELP_STRING([--with-display-text-vfd], [use text based vfd, yes or no]),
-        [[withtextvfd=$withval]],
-        [[withtextvfd=no]]
-)
-if test x"$withtextvfd" != xno ; then
-        AC_DEFINE(DISPLAY_TEXTVFD, 1,[Define when using an text based vfd device])
-fi
-AM_CONDITIONAL(DISPLAY_TEXTVFD, test x"$withtextvfd" != xno)
-
-AC_ARG_WITH(display-graphic-vfd,
-        AC_HELP_STRING([--with-display-graphic-vfd], [use graphic based vfd, yes or no]),
-        [[withgraphicvfd=$withval]],
-        [[withgraphicvfd=no]]
-)
-if test x"$withgraphicvfd" != xno ; then
-        AC_DEFINE(DISPLAY_GRAPHICVFD, 1,[Define when using an graphic based vfd device])
-fi
-AM_CONDITIONAL(DISPLAY_GRAPHICVFD, test x"$withgraphicvfd != xno")
-
-AC_ARG_WITH(libvugles2,
-	AS_HELP_STRING([--with-libvugles2],[use libvugles2, yes or no]),
-	[with_libvugles2=$withval],[with_libvugles2=no])
-if test "$with_libvugles2" = "yes"; then
-	PKG_CHECK_MODULES(LIBVUGLES2, [libvugles2])
-	GLES_CFLAGS="-DUSE_LIBVUGLES2"
-fi
-AM_CONDITIONAL(HAVE_LIBVUGLES2, test "$with_libvugles2" = "yes")
-
-AC_ARG_WITH(libsdl,
-	AS_HELP_STRING([--with-libsdl],[use libsdl, yes or no]),
-	[with_libsdl=$withval],[with_libsdl=no])
-if test "$with_libsdl" = "yes"; then
-	PKG_CHECK_MODULES(LIBSDL, sdl)
-fi
-AM_CONDITIONAL(HAVE_LIBSDL, test "$with_libsdl" = "yes")
-
-AC_ARG_WITH(libxine,
-	AS_HELP_STRING([--with-libxine],[use libxine, yes or no]),
 	[with_libxine=$withval],[with_libxine=no])
 if test "$with_libxine" = "yes"; then
 	PKG_CHECK_MODULES(LIBXINE, libxine)
@@ -120,7 +9,6 @@ AC_ARG_WITH(debug,
 	AS_HELP_STRING([--without-debug],[disable debugging code]),
 	[with_debug="$withval"],[with_debug="yes"])
 if test "$with_debug" = "yes"; then
-	DEBUG_CFLAGS="-ggdb3"
 	AC_DEFINE([DEBUG],[1],[Define to 1 to enable debugging code])
 fi
 
@@ -131,26 +19,31 @@ if test "$with_memcheck" = "yes"; then
 	AC_DEFINE([MEMLEAK_CHECK],[1],[Define to 1 to enable memory leak checks])
 fi
 
-AC_ARG_WITH(po,
-	AS_HELP_STRING([--with-po],[enable updating of po files]),
-	[with_po="$withval"],[with_po="no"])
-if test "$with_po" = "yes"; then
-	AC_PATH_PROG(MSGINIT, msginit)
-	AC_PATH_PROG(MSGMERGE, msgmerge)
-	AC_PATH_PROG(MSGUNIQ, msguniq)
-	AC_PATH_PROG(XGETTEXT, xgettext)
-	if test -z "$MSGINIT" -o -z "$MSGMERGE" -o -z "$MSGUNIQ" -o -z "$XGETTEXT"; then
-		AC_MSG_ERROR([Could not find required gettext tools])
-	fi
+AC_ARG_WITH(fbdev,
+	AC_HELP_STRING([--with-fbdev=devicename], [use devicename for framebuffer device, e.g. /dev/fb0 ]),
+	[[with_fbdev=$withval]],
+	[[with_fbdev=no]]
+)
+if test x"$with_fbdev" != xno ; then
+	AC_DEFINE_UNQUOTED(FB_DEV, "$withval", [Defines which device to use for main framebuffer (e.g. /dev/fb0)])
 fi
-AM_CONDITIONAL(UPDATE_PO, test "$with_po" = "yes")
 
-ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
+AC_ARG_WITH(lcddev,
+	AC_HELP_STRING([--with-lcddev=devicename], [use devicename for lcd framebuffer device, e.g. /dev/fb1 ]),
+	[[with_lcddev=$withval]],
+	[[with_lcddev=no]]
+)
+if test x"$with_lcddev" != xno ; then
+	AC_DEFINE_UNQUOTED(LCD_DEV, "$withval", [Defines which device to use for lcd (e.g. /dev/fb1)])
+fi
+
+ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions -rdynamic -funwind-tables"
 AC_SUBST(ENIGMA2_CFLAGS)
 
 CPPFLAGS="$CPPFLAGS $PYTHON_CPPFLAGS"
-CFLAGS="$CFLAGS $DEBUG_CFLAGS -Wall"
-CXXFLAGS="$CXXFLAGS $DEBUG_CFLAGS -Wall $BASE_CFLAGS $ENIGMA2_CFLAGS $PTHREAD_CFLAGS $GLES_CFLAGS"
+CFLAGS="$CFLAGS -Wall"
+CXXFLAGS="$CXXFLAGS -Wall $BASE_CFLAGS $ENIGMA2_CFLAGS $PTHREAD_CFLAGS $OPENMP_CFLAGS $ALSA_CFLAGS $GLES_CFLAGS"
+AX_SWIG_PYTHON_OPT="$AX_SWIG_PYTHON_OPT -DSWIG_PYTHON_LEGACY_BOOL"
 
 AC_CONFIG_FILES([
 Makefile
@@ -321,15 +214,13 @@ lib/python/Plugins/SystemPlugins/FastChannelChange/Makefile
 lib/python/Plugins/SystemPlugins/FastChannelChange/meta/Makefile
 lib/python/Plugins/SystemPlugins/Ultimo4kMiscControl/Makefile
 lib/python/Plugins/SystemPlugins/Ultimo4kMiscControl/meta/Makefile
-lib/python/Tools/Makefile
 lib/python/Blackhole/Makefile
-lib/service/Makefile
-lib/components/Makefile
+lib/python/Tools/Makefile
 po/Makefile
 main/Makefile
 tools/Makefile
 tools/enigma2.sh
 enigma2.pc
 ])
-AC_DEFINE(BUILD_VUPLUS,1,[Define to 1 for vuplus])
 AC_OUTPUT
+
