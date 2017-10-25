@@ -169,17 +169,7 @@ data/skin_default/buttons/Makefile
 data/skin_default/spinner/Makefile
 include/Makefile
 lib/Makefile
-lib/actions/Makefile
 lib/base/Makefile
-lib/base/eenv.cpp
-lib/driver/Makefile
-lib/dvb/Makefile
-lib/dvb/lowlevel/Makefile
-lib/dvb_ci/Makefile
-lib/gdi/Makefile
-lib/gui/Makefile
-lib/mmi/Makefile
-lib/nav/Makefile
 lib/python/Makefile
 lib/python/Components/Makefile
 lib/python/Components/Converter/Makefile
