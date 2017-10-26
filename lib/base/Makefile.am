@@ -22,7 +22,7 @@ base_libenigma_base_a_SOURCES = \
 	httpstream.cpp \
 	socketbase.cpp
 
-EXTRA_DIST += \
+EXTRA_DIST = \
 	base/eenv.cpp.in
 
 baseincludedir = $(pkgincludedir)/lib/base
