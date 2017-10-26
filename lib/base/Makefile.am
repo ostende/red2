@@ -1,12 +1,6 @@
-AM_CPPFLAGS = \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/include \
-	-include Python.h \
-	-include $(top_builddir)/enigma2_config.h
+noinst_LIBRARIES += base/libenigma_base.a
 
-noinst_LIBRARIES = libenigma_base.a
-
-libenigma_base_a_SOURCES = \
+base_libenigma_base_a_SOURCES = \
 	buffer.cpp \
 	connection.cpp \
 	console.cpp \
@@ -28,8 +22,8 @@ libenigma_base_a_SOURCES = \
 	httpstream.cpp \
 	socketbase.cpp
 
-EXTRA_DIST = \
-	eenv.cpp.in
+EXTRA_DIST += \
+	base/eenv.cpp.in
 
 baseincludedir = $(pkgincludedir)/lib/base
 baseinclude_HEADERS = \
