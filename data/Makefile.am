@@ -1,4 +1,4 @@
-SUBDIRS = countries fonts defaults extensions keymaps skin_default piconlcd
+SUBDIRS = countries fonts defaults extensions keymaps piconlcd
 
 dist_pkgdata_DATA = \
 	defaultsatlists.xml \
@@ -11,7 +11,6 @@ dist_pkgdata_DATA = \
 	radio.mvi \
 	rcpositions.xml \
 	setup.xml \
-	skin_default.xml \
 	skin.xml \
 	startwizard.xml \
 	tutorialwizard.xml \
