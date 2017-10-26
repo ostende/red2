@@ -1,4 +1,4 @@
-noinst_LIBRARIES += base/libenigma_base.a
+noinst_LIBRARIES = base/libenigma_base.a
 
 base_libenigma_base_a_SOURCES = \
 	buffer.cpp \
