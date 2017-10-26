@@ -461,7 +461,6 @@ CXXFLAGS="$CXXFLAGS -Wall $BASE_CFLAGS $ENIGMA2_CFLAGS $PTHREAD_CFLAGS $OPENMP_C
 AX_SWIG_PYTHON_OPT="$AX_SWIG_PYTHON_OPT -DSWIG_PYTHON_LEGACY_BOOL"
 
 AC_CONFIG_FILES([
-AC_ARG_WITH(lcddev,
 Makefile
 data/Makefile
 data/fonts/Makefile
@@ -473,9 +472,6 @@ data/defaults/Dream/hdbouquets/Makefile
 data/defaults/Dream/sdbouquets/Makefile
 data/extensions/Makefile
 data/keymaps/Makefile
-data/skin_default/Makefile
-data/skin_default/buttons/Makefile
-data/skin_default/spinner/Makefile
 include/Makefile
 lib/Makefile
 lib/base/Makefile
